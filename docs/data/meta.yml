@@ -1,0 +1,6 @@
+project_name: Inane
+default_og_image: /og.png
+logo_image: /logo.svg
+side_nav_title: Docs
+github_url: https://github.com/cloudcannon/inane
+version_env_var: HUGO_INANE_DOCS_VERSION

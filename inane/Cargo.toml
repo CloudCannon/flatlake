@@ -1,0 +1,9 @@
+[package]
+name = "inane"
+version = "0.0.0"
+edition = "2021"
+include = ["/src", "/features", "/tests"]
+description = "Intentionally useless."
+license = "MIT"
+
+[dependencies]

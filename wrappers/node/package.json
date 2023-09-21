@@ -1,0 +1,26 @@
+{
+  "name": "inane",
+  "version": "0.0.0",
+  "description": "Intentionally useless.",
+  "bin": "lib/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CloudCannon/inane"
+  },
+  "author": "CloudCannon",
+  "license": "MIT",
+  "optionalDependencies": {
+    "inane-linux-x64": "0.0.0",
+    "inane-linux-arm64": "0.0.0",
+    "inane-darwin-x64": "0.0.0",
+    "inane-darwin-arm64": "0.0.0",
+    "inane-windows-x64": "0.0.0"
+  },
+  "keywords": [
+    "useless"
+  ],
+  "bugs": {
+    "url": "https://github.com/CloudCannon/inane/issues"
+  },
+  "homepage": "https://github.com/CloudCannon/inane#readme"
+}
