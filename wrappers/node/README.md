@@ -1,3 +1,3 @@
-# Inane
+# Flatlake
 
-The CLI for Inane.
+The CLI for Flatlake.

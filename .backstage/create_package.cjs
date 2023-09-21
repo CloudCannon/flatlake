@@ -13,18 +13,18 @@ if (!os || !cpu) {
 fs.writeFileSync(path.join(cwd, "package.json"), JSON.stringify({
     name: package_name,
     version: "0.0.0",
-    description: `The platform-specific binary for inane on ${os}/${cpu}`,
+    description: `The platform-specific binary for flatlake on ${os}/${cpu}`,
     license: "MIT",
     repository: {
         type: "git",
-        url: "git+https://github.com/cloudcannon/inane.git"
+        url: "git+https://github.com/cloudcannon/flatlake.git"
     },
     author: "CloudCannon",
     os: [ os ],
     cpu: [ cpu ],
 }));
 
-fs.writeFileSync(path.join(cwd, "README.md"), `# Inane
+fs.writeFileSync(path.join(cwd, "README.md"), `# Flatlake
 
-The platform-specific binary for inane on ${os}/${cpu}
+The platform-specific binary for flatlake on ${os}/${cpu}
 `);

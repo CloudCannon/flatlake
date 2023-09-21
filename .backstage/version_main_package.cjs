@@ -10,7 +10,7 @@ if (!version) {
 const pkg = path.join(__dirname, "../wrappers/node/package.json");
 
 const pkg_contents = JSON.parse(fs.readFileSync(pkg, { encoding: "utf-8" }));
-for (const dep of Object.keys(pkg_contents.optionalDependencies).filter(dep => dep.startsWith("inane"))) {
+for (const dep of Object.keys(pkg_contents.optionalDependencies).filter(dep => dep.startsWith("flatlake"))) {
     pkg_contents.optionalDependencies[dep] = version;
 }
 

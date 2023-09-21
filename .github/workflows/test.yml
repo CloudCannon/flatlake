@@ -64,13 +64,13 @@ jobs:
           version: ${{env.HUMANE_VERSION}}
 
       - name: Build Testing Binary
-        working-directory: ./inane
+        working-directory: ./flatlake
         run: cargo build --release
 
       - name: Test Lib
-        working-directory: ./inane
+        working-directory: ./flatlake
         run: cargo test --release --lib
 
       - name: Test CLI
-        working-directory: ./inane
-        run: TEST_BINARY=../target/release/inane humane
+        working-directory: ./flatlake
+        run: TEST_BINARY=../target/release/flatlake humane

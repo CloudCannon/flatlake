@@ -5,4 +5,4 @@ nav_section: Root
 weight: 2
 ---
 
-There is nothing to do.
+Getting started with Flatlake.

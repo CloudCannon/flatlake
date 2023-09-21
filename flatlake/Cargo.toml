@@ -1,9 +1,9 @@
 [package]
-name = "inane"
+name = "flatlake"
 version = "0.0.0"
 edition = "2021"
 include = ["/src", "/features", "/tests"]
-description = "Intentionally useless."
+description = "In the works."
 license = "MIT"
 
 [dependencies]

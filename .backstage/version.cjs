@@ -19,6 +19,6 @@ const file = (localPath) => {
     return { path: localPath, contents };
 }
 
-let inaneCfg = file("../inane/Cargo.toml");
-inaneCfg.contents = inaneCfg.contents.replace(version_re, `version = "${version}"`);
-fs.writeFileSync(inaneCfg.path, inaneCfg.contents);
+let flatlakeCfg = file("../flatlake/Cargo.toml");
+flatlakeCfg.contents = flatlakeCfg.contents.replace(version_re, `version = "${version}"`);
+fs.writeFileSync(flatlakeCfg.path, flatlakeCfg.contents);

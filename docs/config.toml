@@ -1,6 +1,6 @@
 baseURL = '/'
 languageCode = 'en-us'
-title = 'Inane Documentation'
+title = 'Flatlake Documentation'
 summaryLength = 30
 disableKinds = ["taxonomyTerm"]
 

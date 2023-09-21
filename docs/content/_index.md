@@ -1,7 +1,7 @@
 ---
-title: Inane
+title: Flatlake
 nav_title: Home
 weight: 1
 ---
 
-Inane documentation.
+Flatlake documentation.

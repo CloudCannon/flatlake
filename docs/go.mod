@@ -1,4 +1,4 @@
-module github.com/cloudcannon/inane/docs
+module github.com/cloudcannon/flatlake/docs
 
 go 1.18
 

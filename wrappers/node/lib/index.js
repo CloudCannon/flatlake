@@ -2,7 +2,7 @@
 const os = require('os');
 const { spawnSync } = require('child_process');
 
-const execname = 'inane';
+const execname = 'flatlake';
 
 function resolveBinaryPath() {
     const cpu = process.env.npm_config_arch || os.arch();

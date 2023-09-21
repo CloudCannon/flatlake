@@ -1,26 +1,30 @@
 {
-  "name": "inane",
+  "name": "flatlake",
   "version": "0.0.0",
-  "description": "Intentionally useless.",
+  "description": "In the works",
   "bin": "lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/CloudCannon/inane"
+    "url": "https://github.com/CloudCannon/flatlake"
   },
   "author": "CloudCannon",
   "license": "MIT",
   "optionalDependencies": {
-    "inane-linux-x64": "0.0.0",
-    "inane-linux-arm64": "0.0.0",
-    "inane-darwin-x64": "0.0.0",
-    "inane-darwin-arm64": "0.0.0",
-    "inane-windows-x64": "0.0.0"
+    "flatlake-linux-x64": "0.0.0",
+    "flatlake-linux-arm64": "0.0.0",
+    "flatlake-darwin-x64": "0.0.0",
+    "flatlake-darwin-arm64": "0.0.0",
+    "flatlake-windows-x64": "0.0.0"
   },
   "keywords": [
-    "useless"
+    "flat",
+    "git",
+    "data lake",
+    "static",
+    "api"
   ],
   "bugs": {
-    "url": "https://github.com/CloudCannon/inane/issues"
+    "url": "https://github.com/CloudCannon/flatlake/issues"
   },
-  "homepage": "https://github.com/CloudCannon/inane#readme"
+  "homepage": "https://github.com/CloudCannon/flatlake#readme"
 }

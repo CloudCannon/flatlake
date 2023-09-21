@@ -50,14 +50,14 @@ jobs:
         run: |
           # Update cargo version, 
           node ./.backstage/version.cjs
-          git add ./inane/Cargo.toml
+          git add ./flatlake/Cargo.toml
           # Commit changes so cargo doesn't complain about dirty repo
           git commit -m "Deploy changes."
 
       - name: Build
         run: cargo build --release --verbose
       - name: Publish
-        working-directory: ./inane
+        working-directory: ./flatlake
         run: cargo publish --allow-dirty
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
@@ -101,23 +101,23 @@ jobs:
       matrix:
         include:
           - target: x86_64-pc-windows-msvc
-            package: inane-windows-x64
+            package: flatlake-windows-x64
             os: win32
             cpu: x64
           - target: x86_64-unknown-linux-musl
-            package: inane-linux-x64
+            package: flatlake-linux-x64
             os: linux
             cpu: x64
           - target: aarch64-unknown-linux-musl
-            package: inane-linux-arm64
+            package: flatlake-linux-arm64
             os: linux
             cpu: arm64
           - target: x86_64-apple-darwin
-            package: inane-darwin-x64
+            package: flatlake-darwin-x64
             os: darwin
             cpu: x64
           - target: aarch64-apple-darwin
-            package: inane-darwin-arm64
+            package: flatlake-darwin-arm64
             os: darwin
             cpu: arm64
     steps:
@@ -143,7 +143,7 @@ jobs:
       - name: Extract Binary
         working-directory: build-artifacts
         run: |
-          tar xzf inane-v$GIT_VERSION-${{ matrix.target }}.tar.gz
+          tar xzf flatlake-v$GIT_VERSION-${{ matrix.target }}.tar.gz
           rm *.tar.gz
           mv * ../${{ matrix.package }}/bin/
 
@@ -210,7 +210,7 @@ jobs:
         with:
           route: PUT /repos/{owner}/{repo}/contents/CHANGELOG.md
           owner: cloudcannon
-          repo: inane
+          repo: flatlake
           branch: main
           message: Changelog for ${{ env.GIT_VERSION }}
           sha: ${{ env.SHA }}
@@ -224,7 +224,7 @@ jobs:
         with:
           route: POST /repos/{owner}/{repo}/merges
           owner: cloudcannon
-          repo: inane
+          repo: flatlake
           base: production-docs
           head: main
           commit_message: Release documentation for ${{ env.GIT_VERSION }}
@@ -350,32 +350,32 @@ jobs:
         run: |
           # Update cargo version, 
           node ./.backstage/version.cjs
-          git add ./inane/Cargo.toml
+          git add ./flatlake/Cargo.toml
           # Commit changes so cargo doesn't complain about dirty repo
           git commit -m "Deploy changes."
 
       - name: Build
-        working-directory: ./inane
+        working-directory: ./flatlake
         run: cargo build --release --target ${{ matrix.target }}
 
       - name: Test Lib
         if: matrix.run_tests == true
-        working-directory: ./inane
+        working-directory: ./flatlake
         run: cargo test --release --target ${{ matrix.target }}
 
       - name: Test CLI
         if: matrix.run_tests == true
-        working-directory: ./inane
-        run: TEST_BINARY=../target/${{ matrix.target }}/release/inane humane
+        working-directory: ./flatlake
+        run: TEST_BINARY=../target/${{ matrix.target }}/release/flatlake humane
 
       - name: Create Release Assets
         run: |
-          EXEC_NAME="inane"
+          EXEC_NAME="flatlake"
           ASSET_PATH="$EXEC_NAME-v$GIT_VERSION-${{ matrix.target }}.tar.gz"
           CHECKSUM_PATH="$ASSET_PATH.sha256"
 
           if [ "$RUNNER_OS" == "Windows" ]; then
-            EXEC_NAME="inane.exe"
+            EXEC_NAME="flatlake.exe"
           fi
 
           if command -v gtar &> /dev/null; then
