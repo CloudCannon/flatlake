@@ -5,14 +5,14 @@ Feature: Base Tests
             | FLATLAKE_SOURCE  | content |
             | FLATLAKE_DEST    | api     |
             | FLATLAKE_VERBOSE | true    |
-        Given I have a "flatlake.yaml" file with the body:
+        Given I have a "flatlake.yaml" file with the content:
             """
             collections:
               - output_key: "animals"
-                path: "content/animals"
+                path: "animals"
                 glob: "**/*.{md}"
-                sort:
-                  - published_date
+                sort_key: published_date
+                sort_direction: desc
             """
         Given I have a "content/animals/cat.md" file with the body:
             """
@@ -71,13 +71,13 @@ Feature: Base Tests
     Scenario: Output aggregate files from front matter
         When I run my program
         Then I should see "flatlake running" in stdout
-        Then I should see "api/aggregate/tags/mammal/01.json" containing the values:
-            | 0.uuid       | def |
-            | 0.info.title | Dog |
-            | 1.uuid       | abc |
-            | 1.info.title | Cat |
+        Then I should see "api/animals/aggregate/tags/mammal/01.json" containing the values:
+            | 0.data.uuid       | def |
+            | 0.data.info.title | Dog |
+            | 1.data.uuid       | abc |
+            | 1.data.info.title | Cat |
         Then I should see "flatlake running" in stdout
-        Then I should see "api/aggregate/tags/herbivore/01.json" containing the values:
-            | 0.uuid       | ghi    |
-            | 0.info.title | Iguana |
+        Then I should see "api/animals/aggregate/tags/herbivore/01.json" containing the values:
+            | 0.data.uuid       | ghi    |
+            | 0.data.info.title | Iguana |
 
