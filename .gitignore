@@ -27,3 +27,6 @@ vendor
 
 # Node
 node_modules
+
+tmp
+.vscode
