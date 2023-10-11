@@ -5,13 +5,23 @@ use std::time::Duration;
 
 use anyhow::Error;
 use futures::future::join_all;
-use serde_json::{Number, Value};
+use serde::Serialize;
+use serde_json::{json, Number, Value};
 use tokio::fs::{create_dir_all, File};
 use tokio::io::AsyncWriteExt;
 use tokio::time::sleep;
 
 use crate::options::SortDirection;
-use crate::{AggregateDataPoints, DataPoint, DataPointReference, LakeContext};
+use crate::{AggregatedDataPoints, DataPoint, LakeContext};
+
+#[derive(Serialize)]
+struct PaginatedValues {
+    page: usize,
+    total_pages: usize,
+    has_more: bool,
+    next_page: Option<PathBuf>,
+    values: Vec<Value>,
+}
 
 fn sort_number(x: &Number, y: &Number) -> Ordering {
     let x_f = x
@@ -27,24 +37,22 @@ fn sort_number(x: &Number, y: &Number) -> Ordering {
 }
 
 pub async fn create_list_output(
-    agg: AggregateDataPoints,
+    agg: AggregatedDataPoints,
     data: &Vec<DataPoint>,
     ctx: &LakeContext,
 ) -> Result<(), Error> {
-    let mut content: Vec<_> = agg
-        .lists
-        .iter()
-        .flat_map(|p| data.get(*p))
-        .flat_map(|d| {
-            d.front_matter.as_ref().map(|fm| DataPointReference {
-                url: &d.output_url,
-                data: fm,
-            })
-        })
-        .collect();
+    let mut output_list = agg.data_points.clone();
+    output_list.sort_by(|a, b| {
+        let a_key = data
+            .get(*a)
+            .map(|d| d.get_sort_value(&agg.sort_key))
+            .flatten();
+        let b_key = data
+            .get(*b)
+            .map(|d| d.get_sort_value(&agg.sort_key))
+            .flatten();
 
-    content.sort_by(|a, b| {
-        let o = match (a.data.get(&agg.sort_key), b.data.get(&agg.sort_key)) {
+        let o = match (a_key, b_key) {
             (None, Some(_)) => Ordering::Less,
             (Some(_), None) => Ordering::Greater,
             (Some(Value::Number(x)), Some(Value::Number(y))) => sort_number(x, y),
@@ -59,45 +67,71 @@ pub async fn create_list_output(
         }
     });
 
-    let content = match serde_json::to_vec_pretty(&content) {
-        Ok(content) => content,
-        Err(e) => {
-            ctx.logger.error(format!(
-                "Failed to parse content for {:?}: {}",
-                agg.output_url, e,
-            ));
-            return Err(e.into());
-        }
+    let page_size = if agg.page_size == 0 {
+        // A page size of 0 denotes all items on one page
+        agg.data_points.len()
+    } else {
+        agg.page_size
     };
 
-    let disk_output_url = ctx.params.dest.join(agg.output_url);
+    let pages = output_list.chunks(page_size);
+    let page_count = pages.len();
 
-    ctx.logger
-        .v_info(format!("Writing file at {disk_output_url:?}"));
+    let mut paged_output = pages
+        .into_iter()
+        .enumerate()
+        .map(|(page_number, values)| {
+            let logical_page = page_number + 1;
+            let paged_output_url = agg.output_url.join(format!("page-{}.json", logical_page));
+            return (paged_output_url, logical_page, values);
+        })
+        .peekable();
 
-    write(disk_output_url, content).await;
+    while let Some((paged_output_url, page_number, values)) = paged_output.next() {
+        let next_page = paged_output.peek();
+
+        let output_data_points = values
+            .into_iter()
+            .map(|dp_index| {
+                data.get(*dp_index)
+                    .expect("Data point should exist")
+                    .get_value_for_list(ctx)
+            })
+            .collect::<Vec<_>>();
+
+        let output_page = PaginatedValues {
+            page: page_number,
+            total_pages: page_count,
+            has_more: next_page.is_some(),
+            next_page: next_page.map(|p| p.0.clone()),
+            values: output_data_points,
+        };
+
+        let content = serde_json::to_vec_pretty(&output_page)
+            .expect("Serializing PaginatedValues shouldn't fail");
+
+        let disk_output_url = ctx.params.dest.join(paged_output_url);
+
+        ctx.logger
+            .v_info(format!("Writing file at {disk_output_url:?}"));
+
+        write(disk_output_url, content).await;
+    }
 
     Ok(())
 }
 
-pub async fn create_output(data_point: DataPoint, ctx: &LakeContext) -> Result<(), Error> {
-    let content = match serde_json::to_vec_pretty(&data_point.front_matter) {
-        Ok(content) => content,
-        Err(e) => {
-            ctx.logger.error(format!(
-                "Failed to parse content for {:?}: {}",
-                data_point.output_url, e,
-            ));
-            return Err(e.into());
-        }
-    };
+pub async fn create_output(mut data_point: DataPoint, ctx: &LakeContext) -> Result<(), Error> {
+    let output_value = data_point.get_value_for_single(ctx);
+    let output_bytes =
+        serde_json::to_vec_pretty(&output_value).expect("Serializing a Value shouldn't fail");
 
     let disk_output_url = ctx.params.dest.join(data_point.output_url);
 
     ctx.logger
         .v_info(format!("Writing file at {disk_output_url:?}"));
 
-    write(disk_output_url, content).await;
+    write(disk_output_url, output_bytes).await;
 
     Ok(())
 }

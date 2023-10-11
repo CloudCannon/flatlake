@@ -27,3 +27,4 @@ lazy_static = "1.4.0"
 schematic = { version = "0.12.0", features = ["yaml"] }
 miette = { version = "5.10.0", features = ["fancy"] }
 el-slugify = "0.1.1"
+markdown = { version = "1.0.0-alpha.14", features = ["json"] }

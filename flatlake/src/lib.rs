@@ -2,6 +2,7 @@ use std::path::PathBuf;
 
 use futures::future::join_all;
 use logging::Logger;
+use markdown::mdast;
 use options::SortDirection;
 pub use options::{LakeContext, LakeParameters};
 use serde::Serialize;
@@ -15,6 +16,7 @@ mod logging;
 mod options;
 mod outflow;
 mod sampler;
+mod transformations;
 
 pub struct Watershed {
     pub options: LakeContext,
@@ -35,20 +37,22 @@ pub struct DataPoint {
     pub output_url: PathBuf,
     pub front_matter: Option<serde_json::Value>,
     pub content: Option<String>,
+    pub content_ast: Option<serde_json::Value>,
 }
 
-#[derive(Debug, Serialize)]
-pub struct DataPointReference<'a> {
-    pub url: &'a PathBuf,
-    pub data: &'a Value,
+impl DataPoint {
+    fn get_sort_value(&self, key: &String) -> Option<&Value> {
+        self.front_matter.as_ref()?.as_object()?.get(key)
+    }
 }
 
 #[derive(Debug)]
-pub struct AggregateDataPoints {
+pub struct AggregatedDataPoints {
     pub sort_key: String,
     pub sort_direction: SortDirection,
     pub output_url: PathBuf,
-    pub lists: Vec<usize>,
+    pub page_size: usize,
+    pub data_points: Vec<usize>,
 }
 
 impl Watershed {

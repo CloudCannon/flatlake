@@ -14,7 +14,7 @@ Feature: Base Tests
                 sort_key: published_date
                 sort_direction: desc
             """
-        Given I have a "content/animals/cat.md" file with the body:
+        Given I have a "content/animals/cat.md" file with the content:
             """
             ---
             _schema: animal
@@ -27,7 +27,7 @@ Feature: Base Tests
               - carnivore
             ---
             """
-        Given I have a "content/animals/dog.md" file with the body:
+        Given I have a "content/animals/dog.md" file with the content:
             """
             ---
             _schema: animal
@@ -40,7 +40,7 @@ Feature: Base Tests
               - carnivore
             ---
             """
-        Given I have a "content/animals/iguana.md" file with the body:
+        Given I have a "content/animals/iguana.md" file with the content:
             """
             ---
             _schema: animal
@@ -62,22 +62,22 @@ Feature: Base Tests
         When I run my program
         Then I should see "flatlake running" in stdout
         Then I should see "api/animals/cat.json" containing the values:
-            | uuid           | abc                      |
-            | published_date | 2023-09-01T00:00:00+0000 |
-            | info.title     | Cat                      |
-            | tags.0         | mammal                   |
-            | tags.1         | carnivore                |
+            | data.uuid           | abc                      |
+            | data.published_date | 2023-09-01T00:00:00+0000 |
+            | data.info.title     | Cat                      |
+            | data.tags.0         | mammal                   |
+            | data.tags.1         | carnivore                |
 
     Scenario: Output aggregate files from front matter
         When I run my program
         Then I should see "flatlake running" in stdout
-        Then I should see "api/animals/aggregate/tags/mammal/01.json" containing the values:
-            | 0.data.uuid       | def |
-            | 0.data.info.title | Dog |
-            | 1.data.uuid       | abc |
-            | 1.data.info.title | Cat |
+        Then I should see "api/animals/aggregate/tags/mammal/page-1.json" containing the values:
+            | values.0.data.uuid       | def |
+            | values.0.data.info.title | Dog |
+            | values.1.data.uuid       | abc |
+            | values.1.data.info.title | Cat |
         Then I should see "flatlake running" in stdout
-        Then I should see "api/animals/aggregate/tags/herbivore/01.json" containing the values:
-            | 0.data.uuid       | ghi    |
-            | 0.data.info.title | Iguana |
+        Then I should see "api/animals/aggregate/tags/herbivore/page-1.json" containing the values:
+            | values.0.data.uuid       | ghi    |
+            | values.0.data.info.title | Iguana |
 

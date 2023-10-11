@@ -15,6 +15,14 @@ derive_enum!(
     }
 );
 
+#[derive(ConfigEnum, Clone, Copy, Debug, Eq, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum OutputElement {
+    Data,
+    Content,
+    ContentAst,
+}
+
 #[derive(Config, Debug, Clone)]
 #[config(rename_all = "snake_case")]
 pub struct LakeParameters {
@@ -51,6 +59,11 @@ pub struct LakeCollection {
     pub sort_key: String,
     #[setting(default = "asc")]
     pub sort_direction: SortDirection,
+    #[setting(default = vec![OutputElement::Data, OutputElement::Content])]
+    pub single_elements: Vec<OutputElement>,
+    #[setting(default = vec![OutputElement::Data])]
+    pub list_elements: Vec<OutputElement>,
+    pub page_size: Option<usize>,
 }
 
 #[derive(Config, Debug, Clone)]
@@ -60,6 +73,8 @@ pub struct GlobalLakeSettings {
     pub sort_key: String,
     #[setting(default = "asc")]
     pub sort_direction: SortDirection,
+    #[setting(default = 100)]
+    pub page_size: usize,
 }
 
 // The configuration object used internally

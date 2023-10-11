@@ -3,6 +3,7 @@ use crate::LakeContext;
 use crate::Tributary;
 use anyhow::anyhow;
 use anyhow::Error;
+use markdown::ParseOptions;
 use serde::Deserialize;
 
 impl Tributary {
@@ -19,6 +20,7 @@ impl Tributary {
             output_url,
             front_matter: None,
             content: None,
+            content_ast: None,
         };
         let mut front_matter_str: Option<String> = None;
 
@@ -29,8 +31,8 @@ impl Tributary {
 
         while let Some(line) = lines.next() {
             if let Some(content) = data_point.content.as_mut() {
-                content.push('\n');
                 content.push_str(line);
+                content.push('\n');
             } else if front_matter_str.is_none() && line.trim() == "---" {
                 front_matter_str = Some("".into());
             } else if front_matter_str.is_some() && line.trim() == "---" {
@@ -51,6 +53,8 @@ impl Tributary {
                 front_matter_str.push_str(line);
             }
         }
+
+        data_point.hydrate_content_ast_if_needed(ctx);
 
         Ok(data_point)
     }

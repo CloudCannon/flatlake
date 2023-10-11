@@ -1,12 +1,12 @@
 use el_slugify::slugify;
 use std::collections::{HashMap, HashSet};
 
-use crate::{options::SortDirection, AggregateDataPoints, DataPoint, LakeContext};
+use crate::{options::SortDirection, AggregatedDataPoints, DataPoint, LakeContext};
 
 pub async fn generate_all_aggregate_files(
     ctx: &LakeContext,
     data: &Vec<DataPoint>,
-) -> Vec<AggregateDataPoints> {
+) -> Vec<AggregatedDataPoints> {
     let mut all_aggs = vec![];
 
     all_aggs.extend(generate_aggregate_files(ctx, data, None).await);
@@ -22,8 +22,19 @@ pub async fn generate_aggregate_files(
     ctx: &LakeContext,
     data: &Vec<DataPoint>,
     for_collection_id: Option<usize>,
-) -> Vec<AggregateDataPoints> {
+) -> Vec<AggregatedDataPoints> {
     let mut aggregate_data = vec![];
+
+    let page_size = for_collection_id
+        .map(|i| {
+            ctx.params
+                .collections
+                .get(i)
+                .expect("Aggregate should match a valid collection")
+                .page_size
+        })
+        .flatten()
+        .unwrap_or(ctx.params.global.page_size);
 
     let mut front_matter_keys: HashMap<&String, HashMap<String, Vec<usize>>> = HashMap::new();
 
@@ -115,9 +126,9 @@ pub async fn generate_aggregate_files(
                         .get(id)
                         .expect("Collection ID should exist")
                         .output_key;
-                    format!("{collection_key}/aggregate/{output_key}/{output_value}/01.json")
+                    format!("{collection_key}/aggregate/{output_key}/{output_value}/")
                 }
-                None => format!("aggregate/{output_key}/{output_value}/01.json"),
+                None => format!("aggregate/{output_key}/{output_value}/"),
             };
 
             let (sort_key, sort_direction) = match for_collection_id {
@@ -135,11 +146,12 @@ pub async fn generate_aggregate_files(
                 ),
             };
 
-            aggregate_data.push(AggregateDataPoints {
+            aggregate_data.push(AggregatedDataPoints {
                 sort_key,
                 sort_direction,
                 output_url: output_url.into(),
-                lists: pages,
+                page_size,
+                data_points: pages,
             });
         }
     }
