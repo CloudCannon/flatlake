@@ -1,7 +1,7 @@
 use std::time::Instant;
 
-use clap::CommandFactory;
-use flatlake::{LakeContext, LakeParameters, Watershed};
+use clap::{CommandFactory, Parser};
+use flatlake::{get_cli_matches, LakeContext, LakeParameters, Watershed};
 use miette::{Diagnostic, Report};
 use schematic::{ConfigLoader, Format};
 
@@ -15,6 +15,8 @@ const CONFIGS: &[&str] = &[
 #[tokio::main]
 async fn main() {
     let start = Instant::now();
+
+    let cli_matches = get_cli_matches();
 
     let configs: Vec<&str> = CONFIGS
         .iter()
@@ -44,7 +46,9 @@ async fn main() {
             eprintln!("{:?}", Report::new(e));
             std::process::exit(1);
         }
-        Ok(result) => {
+        Ok(mut result) => {
+            result.config.override_from_cli(cli_matches);
+
             if let Ok(ctx) = LakeContext::load(result.config) {
                 let mut watershed = Watershed::new(ctx);
                 let logger = watershed.options.logger.clone();

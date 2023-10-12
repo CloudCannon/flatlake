@@ -68,6 +68,17 @@ Feature: Base Tests
             | data.tags.0         | mammal                   |
             | data.tags.1         | carnivore                |
 
+    Scenario: Output list files for each collection
+        When I run my program
+        Then I should see "flatlake running" in stdout
+        Then I should see "api/animals/all/page-1.json" containing the values:
+            | values.0.data.uuid       | ghi    |
+            | values.0.data.info.title | Iguana |
+            | values.1.data.uuid       | def |
+            | values.1.data.info.title | Dog |
+            | values.2.data.uuid       | abc |
+            | values.2.data.info.title | Cat |
+
     Scenario: Output aggregate files from front matter
         When I run my program
         Then I should see "flatlake running" in stdout

@@ -4,15 +4,19 @@ use futures::future::join_all;
 use logging::Logger;
 use markdown::mdast;
 use options::SortDirection;
-pub use options::{LakeContext, LakeParameters};
+pub use options::{get_cli_matches, LakeContext, LakeParameters};
 use path_slash::PathExt as _;
 use serde::Serialize;
 use serde_json::Value;
 
-use crate::{aggregates::generate_all_aggregate_files, dredger::walk_for_files};
+use crate::{
+    aggregates::generate_all_aggregate_files, dredger::walk_for_files,
+    listings::generate_all_listing_files,
+};
 
 mod aggregates;
 mod dredger;
+mod listings;
 mod logging;
 mod options;
 mod outflow;
@@ -84,6 +88,13 @@ impl Watershed {
             .into_iter()
             .flatten()
             .collect::<Vec<_>>();
+
+        let lists = generate_all_listing_files(&self.options, &sampled_files).await;
+        let writing_lists: Vec<_> = lists
+            .into_iter()
+            .map(|agg| outflow::create_list_output(agg, &sampled_files, &self.options))
+            .collect();
+        join_all(writing_lists).await;
 
         let aggs = generate_all_aggregate_files(&self.options, &sampled_files).await;
         let writing_aggs: Vec<_> = aggs
