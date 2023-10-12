@@ -5,6 +5,7 @@ use std::time::Duration;
 
 use anyhow::Error;
 use futures::future::join_all;
+use path_slash::PathExt as _;
 use serde::Serialize;
 use serde_json::{json, Number, Value};
 use tokio::fs::{create_dir_all, File};
@@ -19,7 +20,7 @@ struct PaginatedValues {
     page: usize,
     total_pages: usize,
     has_more: bool,
-    next_page: Option<PathBuf>,
+    next_page: Option<String>,
     values: Vec<Value>,
 }
 
@@ -103,7 +104,7 @@ pub async fn create_list_output(
             page: page_number,
             total_pages: page_count,
             has_more: next_page.is_some(),
-            next_page: next_page.map(|p| p.0.clone()),
+            next_page: next_page.map(|p| p.0.to_slash_lossy().to_owned().to_string()),
             values: output_data_points,
         };
 

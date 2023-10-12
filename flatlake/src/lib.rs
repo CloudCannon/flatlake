@@ -5,6 +5,7 @@ use logging::Logger;
 use markdown::mdast;
 use options::SortDirection;
 pub use options::{LakeContext, LakeParameters};
+use path_slash::PathExt as _;
 use serde::Serialize;
 use serde_json::Value;
 
@@ -43,6 +44,10 @@ pub struct DataPoint {
 impl DataPoint {
     fn get_sort_value(&self, key: &String) -> Option<&Value> {
         self.front_matter.as_ref()?.as_object()?.get(key)
+    }
+
+    fn get_normalized_url(&self) -> String {
+        self.output_url.to_slash_lossy().to_owned().to_string()
     }
 }
 

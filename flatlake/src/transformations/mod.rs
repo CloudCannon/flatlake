@@ -67,7 +67,8 @@ impl DataPoint {
 
         output_map.insert(
             "url".into(),
-            serde_json::to_value(&self.output_url).expect("Output URL should be serializable"),
+            serde_json::to_value(&self.get_normalized_url())
+                .expect("Output URL should be serializable"),
         );
 
         output_object
