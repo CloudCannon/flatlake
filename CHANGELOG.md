@@ -9,6 +9,8 @@
 
 ## Unreleased
 
+## v0.1.2 (October 12, 2023)
+
 * Single endpoints are output relative to their containing collection path
 * Default globs to `**/*.{md}`
 
