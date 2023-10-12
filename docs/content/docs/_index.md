@@ -1,6 +1,6 @@
 ---
 title: "Getting Started with Flatlake"
-nav_title: "Quick Start"
+nav_title: "Quick start"
 nav_section: Root
 weight: 1
 ---
@@ -48,9 +48,11 @@ tags:
 
 ## Configuring Flatlake
 
-Flatlake needs to know what your logical collections are, and how to process them. To do so, create a Flatlake configuration file at the root of your repository. Flatlake support configuration via `flatlake.yml`, `flatlake.toml`, or `flatlake.json` — these docs will show usage with YAML.
+Flatlake needs to know what your content collections are, and how to process them. Flatlake allows you to specify your own collection structures, which makes it easy to map Flatlake over existing source files from any static site generator.
 
-The most simple configuration to start with for the above folder structure is:
+To start, create a Flatlake configuration file at the root of your repository. Flatlake supports configuration via `flatlake.yml`, `flatlake.toml`, or `flatlake.json` files — these docs will show usage with YAML.
+
+A simple configuration to start with for the above folder structure is:
 
 `flatlake.yml`:
 ```yml
@@ -62,7 +64,8 @@ collections:
 ```
 
 This denotes our `posts` and `authors` folders as collections, each output under the same name in our final API.  
-For each folder, we specify that Flatlake should process all markdown files ending in `.md`.
+
+By default, Flatlake processes all files ending with `.md` in any directory within the collection.
 
 ## Running Flatlake
 
@@ -74,9 +77,9 @@ In the root of your repository, run Flatlake:
 npx -y flatlake
 ```
 
-After completion, you should now find a new directory exists. By default, this directory is named `api`.
+After completion, you should now find a new directory. By default, this directory is named `api`.
 
-Flatlake endeavors to support most use cases out of the box, so this directory contains many qays to query your data. Depending on the contents of each file, the full output directory for our simple file example above might look like:
+Flatlake endeavors to support most use cases out of the box, so this directory contains many ways to query your data. Depending on the contents of each file, the full output directory for our simple example above might look like:
 
 {{< tree >}}
 api/
@@ -85,11 +88,11 @@ api/
 >  >> post_b.json
 >  >> post_c.json
 >  >> all/
->  >  >> page-1.json
+>  >  >> page-1.json           # An endpoint listing all posts
 >  >> aggregate/
 >     >> tags/
 >        >> article/
->        >  >> page-1.json
+>        >  >> page-1.json     # An endpoint listing all posts with a tag of article
 >        >> tech/
 >           >> page-1.json
 >> authors/
@@ -108,10 +111,12 @@ api/
       >> article/
       >  >> page-1.json
       >> tech/
-         >> page-1.json
+         >> page-1.json        # An endpoint listing content within all collections with a tag of tech
 {{< /tree >}}
 
 Looking through this structure, we'll find a few notable endpoints.
+
+### Single endpoints
 
 For each input file, we have a matching single endpoint for its content. For example, the `collections/posts/post_a.md` file now has a JSON representation available at `api/posts/post_a.json`. Looking inside this file, we see:
 
@@ -125,6 +130,8 @@ For each input file, we have a matching single endpoint for its content. For exa
   }
 }
 ```
+
+### Aggregate endpoints
 
 Additionally, we have a range of aggregate files within each collection, and across all of our data. These aggregate files are created for all data keys automatically, allowing you to query for any single facet of your data out of the box. Looking inside `api/posts/aggregate/tags/tech/page-1.md` we might see:
 
@@ -157,4 +164,10 @@ Additionally, we have a range of aggregate files within each collection, and acr
 
 These are paginated lists of your content aggregated by attributes of their front matter. By default, the content is omitted in this view and a link to the single endpoint is provided.
 
+### List endpoints
+
 We also have listing files — e.g. `api/posts/all/page-1.md` — containing the same structure as the aggregate files, but listing all items in that collection.
+
+## Next steps
+
+To further configure the setup of your Flatlake site, see the [Setting up collections](/docs/collections/) page.

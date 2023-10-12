@@ -5,7 +5,10 @@ nav_section: References
 weight: 42
 ---
 
-Collections are how files are grouped in Flatlake.
+Collections are how files are grouped in Flatlake. Each collection specifies:
+- A set of source files to read,
+- An API location to make the data available at,
+- Settings for how to sort, aggregate, and paginate the generated data.
 
 ## Example
 
