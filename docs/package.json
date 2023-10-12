@@ -1,7 +1,7 @@
 {
-  "name": "flatlake-docs",
+  "name": "docs",
   "private": true,
   "dependencies": {
-    "alpinejs": "^3.10.3"
+    "alpinejs": "^3.13.0"
   }
 }

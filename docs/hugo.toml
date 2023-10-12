@@ -1,8 +1,8 @@
-baseURL = '/'
+baseURL = 'https://flatlake.app/'
 languageCode = 'en-us'
-title = 'Flatlake Documentation'
+title = 'Flatlake'
 summaryLength = 30
-disableKinds = ["taxonomyTerm"]
+disableKinds = ["taxonomy"]
 
 [markup]
 highlight.noClasses = false
@@ -11,6 +11,5 @@ highlight.noClasses = false
 # ensures html inside markdown is allowed to render
 unsafe = true
 
-
 [[module.imports]]
-path = 'github.com/cloudcannon/cossidae'
+path = 'github.com/bglw/alto-as-module'

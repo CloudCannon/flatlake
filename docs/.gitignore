@@ -1,5 +1,0 @@
-*.lock
-node_modules
-resources
-package-lock.json
-go.sum
