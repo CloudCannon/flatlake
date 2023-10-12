@@ -84,24 +84,25 @@ api/
 >  >> post_a.json
 >  >> post_b.json
 >  >> post_c.json
+>  >> all/
+>  >  >> page-1.json
 >  >> aggregate/
 >     >> tags/
->     >  >> article/
->     >  >  >> page-1.json
->     >  >> tech/
->     >     >> page-1.json
->     >> date/
->        >> 2023-10-12/
+>        >> article/
 >        >  >> page-1.json
->        >> 2023-10-13/
+>        >> tech/
 >           >> page-1.json
 >> authors/
 >  >> jane.json
 >  >> john.json
+>  >> all/
+>  >  >> page-1.json
 >  >> aggregate/
 >     >> tags/
 >        >> tech/
 >           >> page-1.json
+>> all/
+>  >> page-1.json
 >> aggregate/
    >> tags/
       >> article/
@@ -153,3 +154,7 @@ Additionally, we have a range of aggregate files within each collection, and acr
   ]
 }
 ```
+
+These are paginated lists of your content aggregated by attributes of their front matter. By default, the content is omitted in this view and a link to the single endpoint is provided.
+
+We also have listing files — e.g. `api/posts/all/page-1.md` — containing the same structure as the aggregate files, but listing all items in that collection.

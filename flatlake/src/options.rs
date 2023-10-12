@@ -1,5 +1,5 @@
 use anyhow::{bail, Result};
-use clap::Parser;
+use clap::{arg, command, value_parser, ArgAction, ArgMatches, Command};
 use schematic::{derive_enum, Config, ConfigEnum};
 use serde::{Deserialize, Serialize};
 use std::{env, path::PathBuf};
@@ -23,6 +23,38 @@ pub enum OutputElement {
     ContentAst,
 }
 
+pub fn get_cli_matches() -> ArgMatches {
+    command!()
+        .arg(
+            arg!(
+                -s --source <DIR> "The location of your source files"
+            )
+            .required(false)
+            .value_parser(value_parser!(PathBuf)),
+        )
+        .arg(
+            arg!(
+                -d --dest <DIR> "The location Flatlake should write your output files. Defaults to `api`"
+            )
+            .required(false)
+            .value_parser(value_parser!(PathBuf)),
+        )
+        .arg(
+            arg!(
+                -v --verbose ... "Print verbose logging while generating files. Does not affect the contents of the output files"
+            )
+            .action(clap::ArgAction::SetTrue),
+        )
+        .arg(
+            arg!(
+                --logfile <DIR> "Path to a logfile to write to. Will replace the file on each run"
+            )
+            .required(false)
+            .value_parser(value_parser!(PathBuf)),
+        )
+        .get_matches()
+}
+
 #[derive(Config, Debug, Clone)]
 #[config(rename_all = "snake_case")]
 pub struct LakeParameters {
@@ -34,12 +66,6 @@ pub struct LakeParameters {
     #[setting(default = "api", env = "FLATLAKE_DEST")]
     pub dest: PathBuf,
 
-    #[setting(nested)]
-    pub collections: Vec<LakeCollection>,
-
-    #[setting(nested)]
-    pub global: GlobalLakeSettings,
-
     /// Print verbose logging while building. Does not impact the output files.
     #[setting(env = "FLATLAKE_VERBOSE")]
     pub verbose: bool,
@@ -47,6 +73,12 @@ pub struct LakeParameters {
     ///Path to a logfile to write to. Will replace the file on each run
     #[setting(env = "FLATLAKE_LOGFILE")]
     pub logfile: Option<PathBuf>,
+
+    #[setting(nested)]
+    pub collections: Vec<LakeCollection>,
+
+    #[setting(nested)]
+    pub global: GlobalLakeSettings,
 }
 
 #[derive(Config, Debug, Clone)]
@@ -106,5 +138,25 @@ impl LakeContext {
             logger: Logger::new(log_level, true, config.logfile.clone().map(PathBuf::from)),
             params: config,
         })
+    }
+}
+
+impl LakeParameters {
+    pub fn override_from_cli(&mut self, cli_matches: ArgMatches) {
+        if cli_matches.get_flag("verbose") {
+            self.verbose = true;
+        }
+
+        if let Some(source) = cli_matches.get_one::<PathBuf>("source") {
+            self.source = source.clone();
+        }
+
+        if let Some(dest) = cli_matches.get_one::<PathBuf>("dest") {
+            self.dest = dest.clone();
+        }
+
+        if let Some(logfile) = cli_matches.get_one::<PathBuf>("logfile") {
+            self.logfile = Some(logfile.clone());
+        }
     }
 }
