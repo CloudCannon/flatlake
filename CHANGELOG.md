@@ -9,6 +9,8 @@
 
 ## Unreleased
 
+* Single endpoints are output relative to their containing collection path
+
 ## v0.1.1 (October 12, 2023)
 
 * Resolve binary npm packages correctly

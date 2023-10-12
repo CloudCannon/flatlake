@@ -5,9 +5,15 @@ use wax::{Glob, WalkEntry};
 use crate::{LakeContext, Tributary, Watershed};
 
 impl Tributary {
-    pub fn new_relative_to(file_path: PathBuf, root_path: PathBuf, collection_id: usize) -> Self {
+    pub fn new_relative_to(
+        file_path: PathBuf,
+        root_path: PathBuf,
+        collection_id: usize,
+        collection_name: String,
+    ) -> Self {
         Self {
             collection_id,
+            collection_name,
             file_path: Some(file_path),
             root_path: Some(root_path),
             output_url: None,
@@ -34,7 +40,12 @@ pub async fn walk_for_files(ctx: &LakeContext) -> Vec<Tributary> {
                 .filter_map(Result::ok)
                 .map(WalkEntry::into_path)
                 .map(|file_path| {
-                    Tributary::new_relative_to(file_path, ctx.params.source.clone(), collection_id)
+                    Tributary::new_relative_to(
+                        file_path,
+                        collection_source.clone(),
+                        collection_id,
+                        collection.output_key.clone(),
+                    )
                 });
 
             tributaries.extend(collection_files);
