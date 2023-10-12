@@ -10,11 +10,11 @@
   "author": "CloudCannon",
   "license": "MIT",
   "optionalDependencies": {
-    "flatlake-linux-x64": "0.0.0",
-    "flatlake-linux-arm64": "0.0.0",
-    "flatlake-darwin-x64": "0.0.0",
-    "flatlake-darwin-arm64": "0.0.0",
-    "flatlake-windows-x64": "0.0.0"
+    "@flatlake/linux-x64": "0.0.0",
+    "@flatlake/linux-arm64": "0.0.0",
+    "@flatlake/darwin-x64": "0.0.0",
+    "@flatlake/darwin-arm64": "0.0.0",
+    "@flatlake/windows-x64": "0.0.0"
   },
   "keywords": [
     "flat",
