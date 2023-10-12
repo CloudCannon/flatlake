@@ -9,6 +9,8 @@
 
 ## Unreleased
 
+* Resolve binary npm packages correctly
+
 ## v0.1.0 (October 12, 2023)
 
 * Base release — configuration surface and output syntax considered unstable prior to a `1.0` release.
