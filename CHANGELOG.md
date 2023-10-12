@@ -9,6 +9,8 @@
 
 ## Unreleased
 
+## v0.1.1 (October 12, 2023)
+
 * Resolve binary npm packages correctly
 
 ## v0.1.0 (October 12, 2023)
