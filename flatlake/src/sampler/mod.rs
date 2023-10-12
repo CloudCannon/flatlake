@@ -34,8 +34,8 @@ impl Tributary {
 
         while let Some(line) = lines.next() {
             if let Some(content) = data_point.content.as_mut() {
-                content.push('\n');
                 content.push_str(line);
+                content.push('\n');
             } else if front_matter_str.is_none() && line.trim() == "---" {
                 front_matter_str = Some("".into());
             } else if front_matter_str.is_some() && line.trim() == "---" {
