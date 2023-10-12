@@ -9,4 +9,4 @@
 
 ## Unreleased
 
-* Testing releases.
+* Base release — configuration surface and output syntax considered unstable prior to a `1.0` release.
