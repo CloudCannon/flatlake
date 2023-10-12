@@ -1,6 +1,7 @@
-project_name: Flatlake
+project_name: Flatlake — A static API generator
 default_og_image: /og.png
-logo_image: /logo.svg
-side_nav_title: Docs
-github_url: https://github.com/cloudcannon/flatlake
-version_env_var: HUGO_FLATLAKE_DOCS_VERSION
+favicon:
+  small_icon: /meta/favicon-16x16.png
+  large_icon: /meta/favicon-32x32.png
+  apple_touch_icon: /meta/apple-touch-icon.png
+  shortcut_icon: /meta/favicon.ico

@@ -2,4 +2,4 @@ module github.com/cloudcannon/flatlake/docs
 
 go 1.18
 
-require github.com/cloudcannon/cossidae v0.0.0-20221012014255-23151b43ba84 // indirect
+require github.com/bglw/alto-as-module v0.0.0-20230913092122-33bf111efa20 // indirect

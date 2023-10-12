@@ -54,6 +54,7 @@ pub struct LakeParameters {
 pub struct LakeCollection {
     pub output_key: String,
     pub path: String,
+    #[setting(default = "**/*.{md}")]
     pub glob: String,
     #[setting(default = "date")]
     pub sort_key: String,

@@ -1,3 +1,5 @@
+use std::path::PathBuf;
+
 use crate::DataPoint;
 use crate::LakeContext;
 use crate::Tributary;
@@ -10,10 +12,11 @@ impl Tributary {
     pub async fn read_file(self, ctx: &LakeContext) -> Result<DataPoint, Error> {
         let Some(file_path) = &self.file_path else { todo!("Handle synthetic files") };
 
-        let output_url = file_path
+        let file_url = file_path
             .strip_prefix(&self.root_path.unwrap())
             .unwrap()
             .with_extension("json");
+        let output_url = PathBuf::from(self.collection_name).join(file_url);
 
         let mut data_point = DataPoint {
             collection_id: self.collection_id,

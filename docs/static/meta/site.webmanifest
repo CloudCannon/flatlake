@@ -1,6 +1,6 @@
 {
-    "name": "Rosey",
-    "short_name": "Rosey",
+    "name": "",
+    "short_name": "",
     "icons": [
         {
             "src": "/meta/android-chrome-192x192.png",
@@ -13,7 +13,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#6031d9",
-    "background_color": "#6031d9",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
     "display": "standalone"
 }

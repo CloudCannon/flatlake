@@ -26,6 +26,7 @@ pub struct Watershed {
 #[derive(Debug)]
 pub struct Tributary {
     pub collection_id: usize,
+    pub collection_name: String,
     pub file_path: Option<PathBuf>,
     /// Built URLs should be relative to this directory
     pub root_path: Option<PathBuf>,
