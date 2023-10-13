@@ -33,7 +33,7 @@ date: 2023-10-12
 
 Curabitur **blandit** tempus porttitor. Vestibulum id ligula porta felis euismod semper. Maecenas faucibus mollis interdum.
 
-> Donec id elit non mi porta gravida at eget metus.
+1. Donec id elit non mi porta gravida at eget metus.
 ```
 
 And the contents of `collections/authors/jane.md` might look like:
@@ -122,7 +122,7 @@ For each input file, we have a matching single endpoint for its content. For exa
 
 ```json
 {
-  "content": "\nCurabitur **blandit** tempus porttitor. Vestibulum id ligula porta felis euismod semper. Maecenas faucibus mollis interdum.\n\n> Donec id elit non mi porta gravida at eget metus.\n",
+  "content": "\nCurabitur **blandit** tempus porttitor. Vestibulum id ligula porta felis euismod semper. Maecenas faucibus mollis interdum.\n\n1. Donec id elit non mi porta gravida at eget metus.\n",
   "data": {
     "date": "2023-10-12",
     "tags": [ "article", "tech" ],
