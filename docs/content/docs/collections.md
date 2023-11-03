@@ -142,11 +142,12 @@ For each file's individual JSON endpoint, what Flatlake should include in the fi
 
 Available elements are:
 
-| Output element | Description                                                                                                                                  |
-|----------------|----------------------------------------------------------------------------------------------------------------------------------------------|
-| `data`         | For data files, represents the entire file. For files with front matter (e.g. `.md`), represents the front matter.                           |
-| `content`      | The raw text content after any front matter.                                                                                                 |
-| `content_ast`  | The content after any front matter, parsed as markdown and saved as a structured AST. Useful for rendering this content in non-web contexts. |
+| Output element | Description                                                                                                                                                                       |
+|----------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `data`         | For data files, represents the entire file. For files with front matter (e.g. `.md`), represents the front matter. Output inside the key `data`.                                  |
+| `flat_data`    | The same as `data` above, but all keys are output at the root of the file rather than inside a `data` object.                                                                     |
+| `content`      | The raw text content after any front matter. Output inside the key `content`.                                                                                                     |
+| `content_ast`  | The content after any front matter, parsed as markdown and saved as a structured AST. Useful for rendering this content in non-web contexts. Output inside the key `content_ast`. |
 
 Single endpoints output `data` and `content` by default.
 
@@ -161,6 +162,7 @@ collections:
 ```
 {{< /diffcode >}}
 
+Elements are processed in-order, which might affect which keys are chosen when using `flat_data` if your front matter contains keys named `content` or `data`. Elements specified later in the list will override keys from earlier elements in this case.
 
 ### List elements
 

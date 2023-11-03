@@ -110,6 +110,28 @@ impl DataPoint {
 
                     object.insert("data".into(), front_matter_data);
                 }
+                crate::options::OutputElement::FlatData => {
+                    let front_matter_data = if let Some(front_matter) = self.front_matter.as_ref() {
+                        match serde_json::to_value(front_matter) {
+                            Ok(data) => data,
+                            Err(e) => {
+                                eprintln!("Failed to serialize a file: {e}");
+                                // TODO: Error handle.
+                                std::process::exit(1);
+                            }
+                        }
+                    } else {
+                        json!({})
+                    };
+
+                    for (key, value) in front_matter_data
+                        .as_object()
+                        .expect("Front matter should be an object")
+                        .into_iter()
+                    {
+                        object.insert(key.clone(), value.clone());
+                    }
+                }
                 crate::options::OutputElement::Content => {
                     let content_data = if let Some(content) = self.content.as_ref() {
                         serde_json::to_value(content).unwrap()
