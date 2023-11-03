@@ -82,6 +82,28 @@ global:
   sort_direction: desc
 ```
 
+### Outputs
+
+Globally define what endpoints should be created. Affects the site-wide list and aggregate endpoints,
+and also acts as the default value for collections that do not specify their own outputs.
+
+Available endpoints are:
+
+| Endpoint    | Description                                                                                                                                  |
+|-------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| `single`    | Creates an individual JSON endpoint for every file                                                                                           |
+| `list`      | Creates paginated endpoints at `/all/page-[number].json` and `[collection]/all/page-[number].json`                                           |
+| `aggregate` | Creates aggregation endpoints at `/aggregate/[key]/[value]/page-[number].json` and `[collection]/aggregate/[key]/[value]/page-[number].json` |
+
+All endpoints are enabled by default. Specifying a list here will limit the output to those specified.
+
+```yml
+global:
+  outputs:
+    - "single"
+    - "aggregate"
+```
+
 ## Collection configuration
 
 The `collections` key in your config will contain a list of collections for Flatlake to process.  

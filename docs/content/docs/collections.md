@@ -111,6 +111,31 @@ collections:
 ```
 {{< /diffcode >}}
 
+### Outputs
+
+For within this collection, what endpoints should be created.
+
+Available endpoints are:
+
+| Endpoint    | Description                                                                                |
+|-------------|--------------------------------------------------------------------------------------------|
+| `single`    | Creates an individual JSON endpoint for every file                                         |
+| `list`      | Creates paginated endpoints at `[collection]/all/page-[number].json`                       |
+| `aggregate` | Creates aggregation endpoints at `[collection]/aggregate/[key]/[value]/page-[number].json` |
+
+All endpoints are enabled by default. Specifying a list here will limit the output to those specified.
+
+{{< diffcode >}}
+```yml
+collections:
+  - path: "collections/posts"
+    output_key: "posts"
++    outputs:
++      - "single"
++      - "list"
+```
+{{< /diffcode >}}
+
 ### Single elements
 
 For each file's individual JSON endpoint, what Flatlake should include in the file.

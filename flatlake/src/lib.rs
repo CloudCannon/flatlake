@@ -44,6 +44,7 @@ pub struct DataPoint {
     pub front_matter: Option<serde_json::Value>,
     pub content: Option<String>,
     pub content_ast: Option<serde_json::Value>,
+    pub output_as_single: bool,
 }
 
 impl DataPoint {

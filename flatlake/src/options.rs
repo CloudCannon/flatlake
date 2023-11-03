@@ -23,6 +23,14 @@ pub enum OutputElement {
     ContentAst,
 }
 
+#[derive(ConfigEnum, Clone, Copy, Debug, Eq, PartialEq, Deserialize, Serialize)]
+#[serde(rename_all = "snake_case")]
+pub enum OutputMethod {
+    Single,
+    List,
+    Aggregate,
+}
+
 pub fn get_cli_matches() -> ArgMatches {
     command!()
         .arg(
@@ -88,14 +96,13 @@ pub struct LakeCollection {
     pub path: String,
     #[setting(default = "**/*.{md}")]
     pub glob: String,
-    #[setting(default = "date")]
-    pub sort_key: String,
-    #[setting(default = "asc")]
-    pub sort_direction: SortDirection,
     #[setting(default = vec![OutputElement::Data, OutputElement::Content])]
     pub single_elements: Vec<OutputElement>,
     #[setting(default = vec![OutputElement::Data])]
     pub list_elements: Vec<OutputElement>,
+    pub outputs: Option<Vec<OutputMethod>>,
+    pub sort_key: Option<String>,
+    pub sort_direction: Option<SortDirection>,
     pub page_size: Option<usize>,
 }
 
@@ -108,6 +115,8 @@ pub struct GlobalLakeSettings {
     pub sort_direction: SortDirection,
     #[setting(default = 100)]
     pub page_size: usize,
+    #[setting(default = vec![OutputMethod::Single, OutputMethod::List, OutputMethod::Aggregate])]
+    pub outputs: Vec<OutputMethod>,
 }
 
 // The configuration object used internally
