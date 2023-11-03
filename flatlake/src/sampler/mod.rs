@@ -24,6 +24,7 @@ impl Tributary {
             front_matter: None,
             content: None,
             content_ast: None,
+            output_as_single: false,
         };
         let mut front_matter_str: Option<String> = None;
 
@@ -57,7 +58,7 @@ impl Tributary {
             }
         }
 
-        data_point.hydrate_content_ast_if_needed(ctx);
+        data_point.hydrate_data_point(ctx);
 
         Ok(data_point)
     }

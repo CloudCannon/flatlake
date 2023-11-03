@@ -1,21 +1,37 @@
 use el_slugify::slugify;
 use std::collections::{HashMap, HashSet};
 
-use crate::{options::SortDirection, AggregatedDataPoints, DataPoint, LakeContext};
+use crate::{
+    options::{OutputMethod, SortDirection},
+    AggregatedDataPoints, DataPoint, LakeContext,
+};
 
 pub async fn generate_all_listing_files(
     ctx: &LakeContext,
     data: &Vec<DataPoint>,
 ) -> Vec<AggregatedDataPoints> {
-    let mut all_aggs = vec![];
+    let mut all_lists = vec![];
 
-    all_aggs.push(generate_listing_files(ctx, data, None).await);
+    let outputs = &ctx.params.global.outputs;
 
-    for i in 0..ctx.params.collections.len() {
-        all_aggs.push(generate_listing_files(ctx, data, Some(i)).await);
+    if outputs.contains(&OutputMethod::List) {
+        all_lists.push(generate_listing_files(ctx, data, None).await);
     }
 
-    all_aggs
+    for i in 0..ctx.params.collections.len() {
+        let collection_options = ctx
+            .params
+            .collections
+            .get(i)
+            .expect("Listing should match a valid collection");
+        let collection_outputs = collection_options.outputs.as_ref().unwrap_or(outputs);
+
+        if collection_outputs.contains(&OutputMethod::List) {
+            all_lists.push(generate_listing_files(ctx, data, Some(i)).await);
+        }
+    }
+
+    all_lists
 }
 
 pub async fn generate_listing_files(
@@ -39,8 +55,12 @@ pub async fn generate_listing_files(
             page_size = page_size_override;
         }
 
-        sort_key = collection_options.sort_key.clone();
-        sort_direction = collection_options.sort_direction.clone();
+        if let Some(collection_sort_key) = &collection_options.sort_key {
+            sort_key = collection_sort_key.clone();
+        }
+        if let Some(collection_sort_direction) = &collection_options.sort_direction {
+            sort_direction = collection_sort_direction.clone();
+        }
         output_url = format!("{}/all/", collection_options.output_key);
     }
 

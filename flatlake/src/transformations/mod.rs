@@ -1,15 +1,27 @@
 use markdown::ParseOptions;
 use serde_json::json;
 
-use crate::{options::OutputElement, DataPoint, LakeContext};
+use crate::{
+    options::{OutputElement, OutputMethod},
+    DataPoint, LakeContext,
+};
 
 impl DataPoint {
-    pub fn hydrate_content_ast_if_needed(&mut self, ctx: &LakeContext) {
+    pub fn hydrate_data_point(&mut self, ctx: &LakeContext) {
         let collection_options = ctx
             .params
             .collections
             .get(self.collection_id)
             .expect("Data point should be assigned to a valid collection");
+
+        let outputs = collection_options
+            .outputs
+            .as_ref()
+            .unwrap_or(&ctx.params.global.outputs);
+
+        if outputs.contains(&OutputMethod::Single) {
+            self.output_as_single = true;
+        }
 
         if self.content_ast.is_some() {
             return;
@@ -97,6 +109,28 @@ impl DataPoint {
                     };
 
                     object.insert("data".into(), front_matter_data);
+                }
+                crate::options::OutputElement::FlatData => {
+                    let front_matter_data = if let Some(front_matter) = self.front_matter.as_ref() {
+                        match serde_json::to_value(front_matter) {
+                            Ok(data) => data,
+                            Err(e) => {
+                                eprintln!("Failed to serialize a file: {e}");
+                                // TODO: Error handle.
+                                std::process::exit(1);
+                            }
+                        }
+                    } else {
+                        json!({})
+                    };
+
+                    for (key, value) in front_matter_data
+                        .as_object()
+                        .expect("Front matter should be an object")
+                        .into_iter()
+                    {
+                        object.insert(key.clone(), value.clone());
+                    }
                 }
                 crate::options::OutputElement::Content => {
                     let content_data = if let Some(content) = self.content.as_ref() {

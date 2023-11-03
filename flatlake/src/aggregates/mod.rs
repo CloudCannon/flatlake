@@ -1,7 +1,10 @@
 use el_slugify::slugify;
 use std::collections::{HashMap, HashSet};
 
-use crate::{options::SortDirection, AggregatedDataPoints, DataPoint, LakeContext};
+use crate::{
+    options::{OutputMethod, SortDirection},
+    AggregatedDataPoints, DataPoint, LakeContext,
+};
 
 pub async fn generate_all_aggregate_files(
     ctx: &LakeContext,
@@ -9,10 +12,23 @@ pub async fn generate_all_aggregate_files(
 ) -> Vec<AggregatedDataPoints> {
     let mut all_aggs = vec![];
 
-    all_aggs.extend(generate_aggregate_files(ctx, data, None).await);
+    let outputs = &ctx.params.global.outputs;
+
+    if outputs.contains(&OutputMethod::Aggregate) {
+        all_aggs.extend(generate_aggregate_files(ctx, data, None).await);
+    }
 
     for i in 0..ctx.params.collections.len() {
-        all_aggs.extend(generate_aggregate_files(ctx, data, Some(i)).await);
+        let collection_options = ctx
+            .params
+            .collections
+            .get(i)
+            .expect("Aggregate should match a valid collection");
+        let collection_outputs = collection_options.outputs.as_ref().unwrap_or(outputs);
+
+        if collection_outputs.contains(&OutputMethod::Aggregate) {
+            all_aggs.extend(generate_aggregate_files(ctx, data, Some(i)).await);
+        }
     }
 
     all_aggs
@@ -140,11 +156,11 @@ pub async fn generate_aggregate_files(
                         .expect("Collection ID should exist");
                     (coll.sort_key.clone(), coll.sort_direction)
                 }
-                None => (
-                    ctx.params.global.sort_key.clone(),
-                    ctx.params.global.sort_direction,
-                ),
+                None => (None, None),
             };
+
+            let sort_key = sort_key.unwrap_or_else(|| ctx.params.global.sort_key.clone());
+            let sort_direction = sort_direction.unwrap_or(ctx.params.global.sort_direction);
 
             aggregate_data.push(AggregatedDataPoints {
                 sort_key,
