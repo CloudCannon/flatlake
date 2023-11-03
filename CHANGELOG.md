@@ -9,6 +9,9 @@
 
 ## Unreleased
 
+* A new output of `flat_data` can now be set, which writes front matter keys at the root object rather than within `data`.
+* A new setting `outputs` has been added globally and per collection, allowing you to enable/disable single, list, and aggregate endpoints individually.
+
 ## v0.1.2 (October 12, 2023)
 
 * Single endpoints are output relative to their containing collection path
