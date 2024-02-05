@@ -24,7 +24,7 @@ serde_yaml = "0.9"
 serde = { version = "1", features = ["derive"] }
 lazy_static = "1.4.0"
 schematic = { version = "0.13.0", features = ["yaml"] }
-miette = { version = "5.10.0", features = ["fancy"] }
+miette = { version = "6.0.1", features = ["fancy"] }
 el-slugify = "0.1.1"
 markdown = { version = "1.0.0-alpha.14", features = ["json"] }
 path-slash = "0.2"
