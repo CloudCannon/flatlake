@@ -9,6 +9,8 @@
 
 ## Unreleased
 
+## v0.2.1 (May 2, 2024)
+
 * Flatlake now looks into symlinks when finding content
 
 ## v0.2.0 (November 3, 2023)
