@@ -1,6 +1,6 @@
 use std::path::PathBuf;
 
-use wax::{Glob, WalkEntry};
+use wax::{Glob, LinkBehavior, WalkBehavior, WalkEntry};
 
 use crate::{LakeContext, Tributary, Watershed};
 
@@ -36,7 +36,13 @@ pub async fn walk_for_files(ctx: &LakeContext) -> Vec<Tributary> {
 
         if let Ok(glob) = Glob::new(&collection.glob) {
             let collection_files = glob
-                .walk(&collection_source)
+                .walk_with_behavior(
+                    &collection_source,
+                    WalkBehavior {
+                        depth: usize::MAX,
+                        link: LinkBehavior::ReadTarget,
+                    },
+                )
                 .filter_map(Result::ok)
                 .map(WalkEntry::into_path)
                 .map(|file_path| {
