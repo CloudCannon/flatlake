@@ -9,6 +9,8 @@
 
 ## Unreleased
 
+## v0.3.0 (May 3, 2024)
+
 * BREAKING: Changed collection configuration format to nest `path` within `inputs`
   * Allows multiple inputs to merge into one collection
   * Add ability to put each input under a sub key
