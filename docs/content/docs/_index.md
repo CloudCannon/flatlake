@@ -58,9 +58,11 @@ A simple configuration to start with for the above folder structure is:
 ```yml
 collections:
   - output_key: "posts"
-    path: "collections/posts"
+    inputs:
+      - path: "collections/posts"
   - output_key: "people"
-    path: "collections/authors"
+    inputs:
+      - path: "collections/authors"
 ```
 
 This denotes our `posts` and `authors` folders as collections, each output under the same name in our final API.  
