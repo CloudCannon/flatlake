@@ -122,8 +122,9 @@ Feature: Pagination Tests
             """
             collections:
               - output_key: "animals"
-                path: "animals"
-                glob: "**/*.{md}"
+                inputs:
+                  - path: "animals"
+                    glob: "**/*.{md}"
                 sort_key: published_date
                 sort_direction: desc
             """
@@ -143,8 +144,9 @@ Feature: Pagination Tests
             """
             collections:
               - output_key: "animals"
-                path: "animals"
-                glob: "**/*.{md}"
+                inputs:
+                  - path: "animals"
+                    glob: "**/*.{md}"
                 sort_key: published_date
                 sort_direction: desc
                 page_size: 2
@@ -189,8 +191,9 @@ Feature: Pagination Tests
               page_size: 2
             collections:
               - output_key: "animals"
-                path: "animals"
-                glob: "**/*.{md}"
+                inputs:
+                  - path: "animals"
+                    glob: "**/*.{md}"
                 sort_key: published_date
                 sort_direction: desc
             """
@@ -219,8 +222,9 @@ Feature: Pagination Tests
               page_size: 2 # set a small global page size that we can override
             collections:
               - output_key: "animals"
-                path: "animals"
-                glob: "**/*.{md}"
+                inputs:
+                  - path: "animals"
+                    glob: "**/*.{md}"
                 sort_key: published_date
                 sort_direction: desc
                 page_size: 0 # override this collection to put all items on one page

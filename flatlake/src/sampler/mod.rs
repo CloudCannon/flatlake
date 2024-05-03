@@ -10,16 +10,36 @@ use serde::Deserialize;
 
 impl Tributary {
     pub async fn read_file(self, ctx: &LakeContext) -> Result<DataPoint, Error> {
-        let Some(file_path) = &self.file_path else { todo!("Handle synthetic files") };
+        let collection_options = ctx
+            .params
+            .collections
+            .get(self.collection_id)
+            .expect("Listing should match a valid collection");
+
+        let input_options = collection_options
+            .inputs
+            .get(self.input_id)
+            .expect("Input should exist");
+
+        let Some(file_path) = &self.file_path else {
+            todo!("Handle synthetic files")
+        };
 
         let file_url = file_path
             .strip_prefix(&self.root_path.unwrap())
             .unwrap()
             .with_extension("json");
-        let output_url = PathBuf::from(self.collection_name).join(file_url);
+
+        let mut output_base = PathBuf::from(self.collection_name);
+        if let Some(sub_key) = &input_options.sub_key {
+            output_base = output_base.join(sub_key);
+        }
+
+        let output_url = output_base.join(file_url);
 
         let mut data_point = DataPoint {
             collection_id: self.collection_id,
+            input_id: self.input_id,
             output_url,
             front_matter: None,
             content: None,

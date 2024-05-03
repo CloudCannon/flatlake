@@ -9,8 +9,9 @@ Feature: Output Tests
             """
             collections:
               - output_key: "creatures"
-                path: "collections/animals"
-                glob: "**/*.{md}"
+                inputs:
+                  - path: "collections/animals"
+                    glob: "**/*.{md}"
             """
         Given I have a "collections/animals/cat.md" file with the content:
             """

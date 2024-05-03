@@ -94,9 +94,8 @@ pub struct LakeParameters {
 #[config(rename_all = "snake_case")]
 pub struct LakeCollection {
     pub output_key: String,
-    pub path: String,
-    #[setting(default = "**/*.{md}")]
-    pub glob: String,
+    #[setting(nested)]
+    pub inputs: Vec<LakeCollectionInput>,
     #[setting(default = vec![OutputElement::Data, OutputElement::Content])]
     pub single_elements: Vec<OutputElement>,
     #[setting(default = vec![OutputElement::Data])]
@@ -105,6 +104,15 @@ pub struct LakeCollection {
     pub sort_key: Option<String>,
     pub sort_direction: Option<SortDirection>,
     pub page_size: Option<usize>,
+}
+
+#[derive(Config, Debug, Clone)]
+#[config(rename_all = "snake_case")]
+pub struct LakeCollectionInput {
+    pub path: String,
+    #[setting(default = "**/*.{md}")]
+    pub glob: String,
+    pub sub_key: Option<String>,
 }
 
 #[derive(Config, Debug, Clone)]
