@@ -50,8 +50,9 @@ Feature: Aggregation Tests
             """
             collections:
               - output_key: "animals"
-                path: "animals"
-                glob: "**/*.{md}"
+                inputs:
+                  - path: "animals"
+                    glob: "**/*.{md}"
                 sort_key: published_date
                 sort_direction: desc
             """
@@ -64,8 +65,9 @@ Feature: Aggregation Tests
             """
             collections:
               - output_key: "animals"
-                path: "animals"
-                glob: "**/*.{md}"
+                inputs:
+                  - path: "animals"
+                    glob: "**/*.{md}"
                 sort_key: published_date
                 sort_direction: desc
                 outputs: [ "single" ]

@@ -26,8 +26,9 @@ Feature: Flattened Data Tests
             """
             collections:
               - output_key: "animals"
-                path: "animals"
-                glob: "**/*.{md}"
+                inputs:
+                  - path: "animals"
+                    glob: "**/*.{md}"
                 sort_key: published_date
                 sort_direction: desc
                 single_elements: [ "flat_data", "content" ]
@@ -43,8 +44,9 @@ Feature: Flattened Data Tests
             """
             collections:
               - output_key: "animals"
-                path: "animals"
-                glob: "**/*.{md}"
+                inputs:
+                  - path: "animals"
+                    glob: "**/*.{md}"
                 sort_key: published_date
                 sort_direction: desc
                 single_elements: [ "content", "flat_data" ]

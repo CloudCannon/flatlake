@@ -30,6 +30,7 @@ pub struct Watershed {
 #[derive(Debug)]
 pub struct Tributary {
     pub collection_id: usize,
+    pub input_id: usize,
     pub collection_name: String,
     pub file_path: Option<PathBuf>,
     /// Built URLs should be relative to this directory
@@ -40,6 +41,7 @@ pub struct Tributary {
 #[derive(Debug)]
 pub struct DataPoint {
     pub collection_id: usize,
+    pub input_id: usize,
     pub output_url: PathBuf,
     pub front_matter: Option<serde_json::Value>,
     pub content: Option<String>,

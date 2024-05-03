@@ -15,28 +15,61 @@ Collections are how files are grouped in Flatlake. Each collection specifies:
 `flatlake.yml`:
 ```yml
 collections:
-  - path: "collections/posts"
-    output_key: "posts"
-  - path: "collections/authors"
-    output_key: "people"
+  - output_key: "posts"
+    inputs:
+      - path: "collections/posts"
+  - output_key: "people"
+    inputs:
+      - path: "collections/authors"
 ```
 
 ## Options
 
-Each collection requires a `path` and an `output_key` to be defined.
+Each collection requires an `output_key`, and at least one `inputs` entry containing a `path`.
 
-### Path
+### Input > Path
 
-The path from the global `source` to this collection.
+A path from the global `source` to add to this collection.
 
-Files within this collection will be treated relative to this path.  
+Files within this collection input will be treated relative to this path.  
 In the below example, a file at `<source>/collections/posts/post-a.md` will be output at `<dest>/posts/post-a.json`.
 
 {{< diffcode >}}
 ```yml
 collections:
-+  - path: "collections/posts"
-    output_key: "posts"
+  - output_key: "posts"
+    inputs:
++      - path: "collections/posts"
+```
+{{< /diffcode >}}
+
+### Input > Glob
+
+The glob expression Flatlake should use when finding files within this collection. Defaults to `**/*.{md}` to select all markdown files in any directory.
+
+{{< diffcode >}}
+```yml
+collections:
+  - output_key: "posts"
+    inputs:
+      - path: "collections/posts"
++        glob: "**/*.{md}"
+```
+{{< /diffcode >}}
+
+### Input > Meta
+
+Fixed metadata that should be added to each collection item sourced from this input.
+
+{{< diffcode >}}
+```yml
+collections:
+  - output_key: "posts"
+    inputs:
+      - path: "collections/posts"
++        meta:
++           source: "collections"
++           url: https://example.com
 ```
 {{< /diffcode >}}
 
@@ -54,20 +87,6 @@ collections:
 +    output_key: "files"
 ```
 {{< /diffcode >}}
-
-### Glob
-
-The glob expression Flatlake should use when finding files within this collection. Defaults to `**/*.{md}` to select all markdown files in any directory.
-
-{{< diffcode >}}
-```yml
-collections:
-  - path: "collections/posts"
-    output_key: "posts"
-+    glob: "**/*.{md}"
-```
-{{< /diffcode >}}
-
 
 ### Page size
 
