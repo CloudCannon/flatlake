@@ -49,6 +49,17 @@ impl DataPoint {
     }
 
     pub fn get_value_for_single(&self, ctx: &LakeContext) -> serde_json::Value {
+        let collection_options = ctx
+            .params
+            .collections
+            .get(self.collection_id)
+            .expect("Listing should match a valid collection");
+
+        let input_options = collection_options
+            .inputs
+            .get(self.input_id)
+            .expect("Input should exist");
+
         let mut output_object = json!({});
         let output_map = output_object.as_object_mut().unwrap();
 
@@ -61,10 +72,25 @@ impl DataPoint {
 
         self.add_elements_to_object(single_elements, output_map);
 
+        if let Some(meta) = &input_options.meta {
+            output_map.insert("meta".to_string(), meta.clone());
+        }
+
         output_object
     }
 
     pub fn get_value_for_list(&self, ctx: &LakeContext) -> serde_json::Value {
+        let collection_options = ctx
+            .params
+            .collections
+            .get(self.collection_id)
+            .expect("Listing should match a valid collection");
+
+        let input_options = collection_options
+            .inputs
+            .get(self.input_id)
+            .expect("Input should exist");
+
         let mut output_object = json!({});
         let output_map = output_object.as_object_mut().unwrap();
 
@@ -82,6 +108,10 @@ impl DataPoint {
             serde_json::to_value(&self.get_normalized_url())
                 .expect("Output URL should be serializable"),
         );
+
+        if let Some(meta) = &input_options.meta {
+            output_map.insert("meta".to_string(), meta.clone());
+        }
 
         output_object
     }

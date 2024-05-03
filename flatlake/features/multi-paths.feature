@@ -87,3 +87,32 @@ Feature: Multi-Path Tests
         Then I should see "api/animals/b/iguana.json" containing the values:
             | data.uuid | ghi |
 
+    Scenario: Multiple sources can merge unique keys
+        Given I have a "flatlake.yaml" file with the content:
+            """
+            collections:
+              - output_key: "animals"
+                inputs:
+                  - path: "source-a/animals"
+                    sub_key: "a"
+                    glob: "**/*.{md}"
+                    meta:
+                        label: left
+                  - path: "source-b/animals"
+                    sub_key: "b"
+                    glob: "**/*.{md}"
+                    meta:
+                        label: right
+                sort_key: published_date
+                sort_direction: desc
+            """
+        When I run my program
+        Then I should see "flatlake running" in stdout
+        Then I should see "api/animals/a/cat.json" containing the values:
+            | data.uuid  | abc  |
+            | meta.label | left |
+        Then I should see "api/animals/b/iguana.json" containing the values:
+            | data.uuid  | ghi   |
+            | meta.label | right |
+
+
