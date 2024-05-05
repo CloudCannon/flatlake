@@ -14,10 +14,21 @@ impl DataPoint {
             .get(self.collection_id)
             .expect("Data point should be assigned to a valid collection");
 
+        let input_options = collection_options
+            .inputs
+            .get(self.input_id)
+            .expect("Input should exist");
+
         let outputs = collection_options
             .outputs
             .as_ref()
             .unwrap_or(&ctx.params.global.outputs);
+
+        if let Some(merge_data) = &input_options.merge_data {
+            if let Some(serde_json::Value::Object(base_data)) = self.front_matter.as_mut() {
+                base_data.extend(merge_data.clone().into_iter());
+            }
+        }
 
         if outputs.contains(&OutputMethod::Single) {
             self.output_as_single = true;
@@ -49,17 +60,6 @@ impl DataPoint {
     }
 
     pub fn get_value_for_single(&self, ctx: &LakeContext) -> serde_json::Value {
-        let collection_options = ctx
-            .params
-            .collections
-            .get(self.collection_id)
-            .expect("Listing should match a valid collection");
-
-        let input_options = collection_options
-            .inputs
-            .get(self.input_id)
-            .expect("Input should exist");
-
         let mut output_object = json!({});
         let output_map = output_object.as_object_mut().unwrap();
 
@@ -72,27 +72,10 @@ impl DataPoint {
 
         self.add_elements_to_object(single_elements, output_map);
 
-        if let Some(merge_data) = &input_options.merge_data {
-            if let Some(serde_json::Value::Object(base_data)) = output_map.get_mut("data") {
-                base_data.extend(merge_data.clone().into_iter());
-            }
-        }
-
         output_object
     }
 
     pub fn get_value_for_list(&self, ctx: &LakeContext) -> serde_json::Value {
-        let collection_options = ctx
-            .params
-            .collections
-            .get(self.collection_id)
-            .expect("Listing should match a valid collection");
-
-        let input_options = collection_options
-            .inputs
-            .get(self.input_id)
-            .expect("Input should exist");
-
         let mut output_object = json!({});
         let output_map = output_object.as_object_mut().unwrap();
 
@@ -110,12 +93,6 @@ impl DataPoint {
             serde_json::to_value(&self.get_normalized_url())
                 .expect("Output URL should be serializable"),
         );
-
-        if let Some(merge_data) = &input_options.merge_data {
-            if let Some(serde_json::Value::Object(base_data)) = output_map.get_mut("data") {
-                base_data.extend(merge_data.clone().into_iter());
-            }
-        }
 
         output_object
     }
