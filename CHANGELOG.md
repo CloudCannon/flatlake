@@ -9,6 +9,8 @@
 
 ## Unreleased
 
+* BREAKING: Rename collection `meta` to `merge_data`, changed from standalone object to merge into the `data` object
+
 ## v0.3.0 (May 3, 2024)
 
 * BREAKING: Changed collection configuration format to nest `path` within `inputs`

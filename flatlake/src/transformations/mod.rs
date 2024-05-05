@@ -72,8 +72,10 @@ impl DataPoint {
 
         self.add_elements_to_object(single_elements, output_map);
 
-        if let Some(meta) = &input_options.meta {
-            output_map.insert("meta".to_string(), meta.clone());
+        if let Some(merge_data) = &input_options.merge_data {
+            if let Some(serde_json::Value::Object(base_data)) = output_map.get_mut("data") {
+                base_data.extend(merge_data.clone().into_iter());
+            }
         }
 
         output_object
@@ -109,8 +111,10 @@ impl DataPoint {
                 .expect("Output URL should be serializable"),
         );
 
-        if let Some(meta) = &input_options.meta {
-            output_map.insert("meta".to_string(), meta.clone());
+        if let Some(merge_data) = &input_options.merge_data {
+            if let Some(serde_json::Value::Object(base_data)) = output_map.get_mut("data") {
+                base_data.extend(merge_data.clone().into_iter());
+            }
         }
 
         output_object

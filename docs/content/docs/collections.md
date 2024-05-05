@@ -57,9 +57,9 @@ collections:
 ```
 {{< /diffcode >}}
 
-### Input > Meta
+### Input > Merge Data
 
-Fixed metadata that should be added to each collection item sourced from this input.
+Fixed data that should be merged into each collection item sourced from this input.
 
 {{< diffcode >}}
 ```yml
@@ -67,7 +67,7 @@ collections:
   - output_key: "posts"
     inputs:
       - path: "collections/posts"
-+        meta:
++        merge_data:
 +           source: "collections"
 +           url: https://example.com
 ```

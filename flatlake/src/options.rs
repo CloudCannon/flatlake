@@ -113,7 +113,7 @@ pub struct LakeCollectionInput {
     #[setting(default = "**/*.{md}")]
     pub glob: String,
     pub sub_key: Option<String>,
-    pub meta: Option<serde_json::Value>,
+    pub merge_data: Option<serde_json::Map<String, serde_json::Value>>,
 }
 
 #[derive(Config, Debug, Clone)]
