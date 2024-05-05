@@ -9,6 +9,10 @@
 
 ## Unreleased
 
+## v0.4.1 (May 5, 2024)
+
+* Fixed aggregation on `merge_data`
+
 ## v0.4.0 (May 5, 2024)
 
 * BREAKING: Rename collection `meta` to `merge_data`, changed from standalone object to merge into the `data` object
