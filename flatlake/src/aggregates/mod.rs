@@ -123,6 +123,9 @@ pub async fn generate_aggregate_files(
                 serde_json::Value::String(s) => {
                     add_to_agg(s);
                 }
+                serde_json::Value::Bool(b) => {
+                    add_to_agg(&b.to_string());
+                }
                 serde_json::Value::Array(a) => {
                     a.iter()
                         .filter(|v| matches!(v, serde_json::Value::String(_)))
