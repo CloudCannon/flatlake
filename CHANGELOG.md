@@ -9,6 +9,8 @@
 
 ## Unreleased
 
+* Boolean data now also generates aggregate listings
+
 ## v0.4.1 (May 5, 2024)
 
 * Fixed aggregation on `merge_data`
