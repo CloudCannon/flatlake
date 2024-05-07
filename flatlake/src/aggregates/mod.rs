@@ -76,6 +76,9 @@ pub async fn generate_aggregate_files(
                 serde_json::Value::String(s) => {
                     keystore.insert(s.clone(), vec![]);
                 }
+                serde_json::Value::Bool(b) => {
+                    keystore.insert(b.to_string(), vec![]);
+                }
                 serde_json::Value::Array(a) => {
                     a.iter()
                         .filter(|v| matches!(v, serde_json::Value::String(_)))
@@ -105,7 +108,7 @@ pub async fn generate_aggregate_files(
     {
         for (key, value) in data.iter() {
             let Some(keystore) = front_matter_keys.get_mut(key) else {
-                 continue;
+                continue;
             };
 
             let mut add_to_agg = |loc_str: &String| {
